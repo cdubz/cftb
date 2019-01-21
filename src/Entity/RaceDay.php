@@ -25,6 +25,7 @@ class RaceDay
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Race", mappedBy="raceDay", orphanRemoval=true)
+     * @ORM\OrderBy{"number" = "ASC"})
      */
     private $races;
 

@@ -1,0 +1,22 @@
+{% extends 'board.html.twig' %}
+
+{% block title %}{{ race_day.date|date('Y-m-d') }} | Race {{ race.number }} | Tote Board{% endblock %}
+
+{% block race %}
+    {{ race.number }}
+    <ul class="entries-finished">
+        {% for entry in entries.finished %}
+            <li>{{ entry.horseName }}</li>
+        {% endfor %}
+    </ul>
+    <ul class="entries-scratched">
+        {% for entry in entries.scratched %}
+            <li>{{ entry.horseName }}</li>
+        {% endfor %}
+    </ul>
+    <ul class="entries-also-ran">
+        {% for entry in entries.also_ran %}
+            <li>{{ entry.horseName }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

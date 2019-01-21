@@ -3,6 +3,7 @@
 namespace App\Service;
 use App\Entity\Race;
 use App\Entity\RaceDay;
+use App\Entity\RaceEntry;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -81,6 +82,7 @@ class APIConsumer
                 $race->setNumber($data->Number);
                 $race->setSurface($data->Surface);
                 $race->setTrackCondition($data->TrackCondition);
+                self::addRaceEntries($race, $data);
                 $race->setUpdated(\DateTime::createFromFormat('Y-m-d\TH:i:s.u???P', $data->LastUpdatedAt));
                 $this->entityManager->persist($race);
             }
@@ -88,10 +90,37 @@ class APIConsumer
     }
 
     /**
+     * Add RaceEntry objects to a Race object.
+     *
+     * @param Race $race
+     * @param object $api_data
+     */
+    private function addRaceEntries(Race $race, $api_data) {
+        foreach ($api_data->Entries as $entry_data) {
+            $entry = new RaceEntry();
+            $entry->setRace($race);
+            $entry->setHorseName($entry_data->Horse->Name);
+            $entry->setAlsoRan(FALSE);
+            if (isset($entry_data->FinishPosition)) {
+                $entry->setFinishPosition($entry_data->FinishPosition);
+                if ($entry_data->FinishPosition > 3) {
+                    $entry->setAlsoRan(TRUE);
+                }
+            }
+            foreach (['Scratched', 'WinPayoff', 'PlacePayoff', 'ShowPlayoff'] as $key) {
+                if (isset($entry_data->$key)) {
+                    call_user_func_array([$entry, 'set' . $key], [$entry_data->$key]);
+                }
+            }
+            $this->entityManager->persist($entry);
+        }
+    }
+
+    /**
      * Update an existing RaceDay entity.
      *
      * @param RaceDay $raceDay
-     * @param $api_data
+     * @param object $api_data
      */
     private function updateRaceDay(RaceDay $raceDay, $api_data) {
         /* @TODO */

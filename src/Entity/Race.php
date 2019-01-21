@@ -40,6 +40,7 @@ class Race
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RaceEntry", mappedBy="race", orphanRemoval=true)
+     * @ORM\OrderBy({"finishPosition" = "ASC"})
      */
     private $entries;
 
@@ -141,6 +142,54 @@ class Race
         }
 
         return $this;
+    }
+
+    /**
+     * @param int $position Maximum finishPosition to get.
+     *
+     * @return RaceEntry[]|Collection
+     */
+    public function getFinishedEntries(int $position): Collection
+    {
+        $finished = new ArrayCollection();
+        /** @var RaceEntry $entry */
+        foreach ($this->entries as $entry) {
+            $finish_position = $entry->getFinishPosition();
+            if ($finish_position && $finish_position <= $position) {
+                $finished->add($entry);
+            }
+        }
+        return $finished;
+    }
+
+    /**
+    * @return Collection|RaceEntry[]
+    */
+    public function getScratchedEntries(): Collection
+    {
+        $scratched = new ArrayCollection();
+        /** @var RaceEntry $entry */
+        foreach ($this->entries as $entry) {
+            if ($entry->getScratched()) {
+                $scratched->add($entry);
+            }
+        }
+        return $scratched;
+    }
+
+    /**
+     * @return Collection|RaceEntry[]
+     */
+    public function getAlsoRanEntries(): Collection
+    {
+        $also_ran = new ArrayCollection();
+        /** @var RaceEntry $entry */
+        foreach ($this->entries as $entry) {
+            if ($entry->getAlsoRan()) {
+                $also_ran->add($entry);
+            }
+        }
+        return $also_ran;
     }
 
     public function getUpdated(): ?\DateTimeInterface

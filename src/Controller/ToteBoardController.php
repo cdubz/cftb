@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\RaceEntry;
 use App\Repository\RaceDayRepository;
 use App\Service\APIConsumer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,6 +22,8 @@ class ToteBoardController extends AbstractController
      */
     public function board($race_date, $race_number, Request $request, RaceDayRepository $raceDayRepository, APIConsumer $apiConsumer)
     {
+        $apiConsumer->update();
+
         $RaceDays = $raceDayRepository->findAll();
 
         $race_choices = [];
@@ -46,10 +49,18 @@ class ToteBoardController extends AbstractController
         }
         $Race = $RaceDay->getRaceByNumber($race_number);
 
-        return $this->render('tote_board/index.html.twig', [
+        $entries = [
+            'scratched' => $Race->getScratchedEntries(),
+            'also_ran' => $Race->getAlsoRanEntries(),
+            'finished' => $Race->getFinishedEntries(3),
+        ];
+
+
+        return $this->render('race.html.twig', [
             'form' => $form->createView(),
             'race_day' => $RaceDay,
             'race' => $Race,
+            'entries' => $entries,
         ]);
     }
 }

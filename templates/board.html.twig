@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Tote Board{% endblock %}
+{% block title %}Race Day | Tote Board{% endblock %}
 
 {% block body %}
     <div class="tote-board">
@@ -17,7 +17,7 @@
             {% endfor %}
         </ul>
     </div>
-    <div>
-        {{ race.number }}
+    <div class="race-data">
+        {% block race %}{% endblock %}
     </div>
 {% endblock %}

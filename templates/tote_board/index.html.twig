@@ -9,6 +9,15 @@
         {{ form_end(form) }}
     </div>
     <div>
-        <strong>{{ race_day.date|date('Y-m-d') }}</strong>
+        <ul class="race-selector">
+            {% for race_option in race_day.races  %}
+                <li{{ race.number == race_option.number ? ' class="selected"' }}>
+                    <a href="/board/{{ race_day.date|date('Y-m-d') }}/{{ race_option.number }}">{{ race_option.number }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div>
+        {{ race.number }}
     </div>
 {% endblock %}

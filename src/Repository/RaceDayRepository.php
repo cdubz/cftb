@@ -47,11 +47,11 @@ class RaceDayRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('rd')
             ->andWhere('rd.date = :date')
-            ->setParameter('date', $dateTime)
+            ->setParameter('date', $dateTime->format('Y-m-d'))
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult()
-            ;
+        ;
     }
 
     /**

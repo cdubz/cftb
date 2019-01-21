@@ -58,6 +58,21 @@ class RaceDay
         return $this->races;
     }
 
+    /**
+     * @param $number
+     * @return Race|null The Race object with the specified number.
+     */
+    public function getRaceByNumber($number): ?Race
+    {
+        /** @var \App\Entity\Race $race */
+        foreach ($this->races as $race) {
+            if ($race->getNumber() == $number) {
+                return $race;
+            }
+        }
+        return null;
+    }
+
     public function addRace(Race $race): self
     {
         if (!$this->races->contains($race)) {

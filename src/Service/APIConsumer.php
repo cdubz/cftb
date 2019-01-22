@@ -107,7 +107,7 @@ class APIConsumer
                     $entry->setAlsoRan(TRUE);
                 }
             }
-            foreach (['Scratched', 'WinPayoff', 'PlacePayoff', 'ShowPlayoff'] as $key) {
+            foreach (['Scratched', 'WinPayoff', 'PlacePayoff', 'ShowPayoff'] as $key) {
                 if (isset($entry_data->$key)) {
                     call_user_func_array([$entry, 'set' . $key], [$entry_data->$key]);
                 }

@@ -9,7 +9,8 @@ monolog:
                 - ^/
         nested:
             type: stream
-            path: "%kernel.logs_dir%/%kernel.environment%.log"
+            # Required by Heroku ephemeral filesystem
+            path:  "php://stderr"
             level: debug
         console:
             type: console

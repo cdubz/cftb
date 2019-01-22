@@ -42,7 +42,8 @@ class ToteBoardController extends AbstractController
         $form = $this->get('form.factory')->createNamedBuilder('day-selector')
             ->add('id', ChoiceType::class, [
                 'label' => 'Racing for',
-                'choices' => $race_choices
+                'choices' => $race_choices,
+                'empty_data' => $race_date,
             ])
             ->add('save', SubmitType::class, ['label' => 'Load'])
             ->getForm();

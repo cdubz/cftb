@@ -23,23 +23,6 @@ class RaceDayRepository extends ServiceEntityRepository
         return $this->findBy([], ['date' => 'DESC']);
     }
 
-    // /**
-    //  * @return RaceDay[] Returns an array of RaceDay objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
     /**
      * @return RaceDay|null Returns RaceDay object for the specified date.
      */

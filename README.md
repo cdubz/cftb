@@ -35,4 +35,5 @@ And so on and so forth (there are about 50 races across a few days)
 | Set up basic Race Day & Race selection.               |`1h00m`|
 | Add Race entry processing to API consumer and board.  |`1h00m`|
 | Mark up and style frontend.                           |`0h30m`|
-| **Total**                                             |**`6h30m`**|
+| Add basic API call data "caching".                    |`0h30m`|
+| **Total**                                             |**`7h00m`**|

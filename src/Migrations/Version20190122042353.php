@@ -8,13 +8,15 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190119220414 extends AbstractMigration
+final class Version20190122042353 extends AbstractMigration
 {
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
 
+        $this->addSql('CREATE TABLE api_update_log (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, endpoint VARCHAR(255) NOT NULL, updated DATETIME NOT NULL)');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_9FF269B7C4420F7B ON api_update_log (endpoint)');
         $this->addSql('CREATE TABLE race (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, race_day_id INTEGER NOT NULL, date DATE NOT NULL, number INTEGER NOT NULL, surface VARCHAR(255) NOT NULL, track_condition VARCHAR(255) NOT NULL, updated DATETIME NOT NULL)');
         $this->addSql('CREATE INDEX IDX_DA6FBBAF63945FF5 ON race (race_day_id)');
         $this->addSql('CREATE TABLE race_day (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, date DATE NOT NULL)');
@@ -27,6 +29,7 @@ final class Version20190119220414 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
 
+        $this->addSql('DROP TABLE api_update_log');
         $this->addSql('DROP TABLE race');
         $this->addSql('DROP TABLE race_day');
         $this->addSql('DROP TABLE race_entry');

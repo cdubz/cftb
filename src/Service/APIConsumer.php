@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Service;
+use App\Entity\ApiUpdateLog;
 use App\Entity\Race;
 use App\Entity\RaceDay;
 use App\Entity\RaceEntry;
+use App\Repository\ApiUpdateLogRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -29,15 +31,32 @@ class APIConsumer
     {
         $this->entityManager = $entityManager;
         $this->apiBaseUrl = getenv('API_BASE_URL');
+        $this->apiTimeout = getenv('API_UPDATE_TIMEOUT_SECONDS');
         if (empty($this->apiBaseUrl)) {
-            throw new \RuntimeException('Missing API URL base configuration.');
+            throw new \RuntimeException('Missing required configuration.');
         }
     }
 
+    /**
+     * Update local database from API.
+     *
+     * @return bool TRUE if an update is executed, FALSE if not.
+     */
     public function update()
     {
+        /** @var ApiUpdateLogRepository $ApiUpdateLogRepository */
+        $endpoint = 'tracks/TRK/race-days.json';
+        $ApiUpdateLogRepository = $this->entityManager->getRepository(ApiUpdateLog::class);
+        $lastLog = $ApiUpdateLogRepository->findOneByMostRecentUpdate($endpoint);
+
+        // Only update if the configure timeout has expired.
+        $now = new \DateTime();
+        if ($lastLog && $now->getTimestamp() - $lastLog->getUpdated()->getTimestamp() < $this->apiTimeout) {
+            return FALSE;
+        }
+
         $raceDayRepository = $this->entityManager->getRepository(RaceDay::class);
-        $response = file_get_contents($this->apiBaseUrl . 'tracks/TRK/race-days.json');
+        $response = file_get_contents($this->apiBaseUrl . $endpoint);
         if ($response) {
             $data = json_decode($response);
             foreach ($data as $datum) {
@@ -52,6 +71,11 @@ class APIConsumer
                     self::createRaceDay($datum);
                 }
             }
+
+            $ApiUpdateLog = new ApiUpdateLog();
+            $ApiUpdateLog->setEndpoint($endpoint);
+            $this->entityManager->persist($ApiUpdateLog);
+
             $this->entityManager->flush();
         }
 

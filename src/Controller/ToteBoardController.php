@@ -14,6 +14,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class ToteBoardController extends AbstractController
 {
     /**
+     * @Route("/")
+     */
+    public function index()
+    {
+        return $this->redirectToRoute('board');
+    }
+
+    /**
      * @Route(
      *     "/board/{race_date}/{race_number}",
      *     name="board",
@@ -52,6 +60,14 @@ class ToteBoardController extends AbstractController
             $RaceDay = $raceDayRepository->findMostRecent();
         }
         $Race = $RaceDay->getRaceByNumber($race_number);
+
+        // A refresh is required the first time data is loaded in.
+        if (!$Race) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->refresh($RaceDay);
+            $Race = $RaceDay->getRaceByNumber($race_number);
+            $entityManager->refresh($Race);
+        }
 
         $entries = [
             'scratched' => $Race->getScratchedEntries(),

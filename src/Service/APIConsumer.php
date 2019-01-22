@@ -107,7 +107,11 @@ class APIConsumer
                 $race->setSurface($data->Surface);
                 $race->setTrackCondition($data->TrackCondition);
                 self::addRaceEntries($race, $data);
-                $race->setUpdated(\DateTime::createFromFormat('Y-m-d\TH:i:s.u???P', $data->LastUpdatedAt));
+                $lastUpdated = \DateTime::createFromFormat('Y-m-d\TH:i:s.u???P', $data->LastUpdatedAt);
+                if (!$lastUpdated) {
+                    $lastUpdated = new \DateTime();
+                }
+                $race->setUpdated($lastUpdated);
                 $this->entityManager->persist($race);
             }
         }

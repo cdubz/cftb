@@ -2,12 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\RaceEntry;
 use App\Repository\RaceDayRepository;
 use App\Service\APIConsumer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -30,8 +30,12 @@ class ToteBoardController extends AbstractController
         foreach ($RaceDays as $RaceDay) {
             $race_choices[$RaceDay->getDate()->format('Y-m-d')] = $RaceDay->getId();
         }
-        $form = $this->createFormBuilder()
-            ->add('id', ChoiceType::class, ['choices' => $race_choices])
+        /** @var Form $form */
+        $form = $this->get('form.factory')->createNamedBuilder('day-selector')
+            ->add('id', ChoiceType::class, [
+                'label' => 'Racing for',
+                'choices' => $race_choices
+            ])
             ->add('save', SubmitType::class, ['label' => 'Load'])
             ->getForm();
 
@@ -54,7 +58,6 @@ class ToteBoardController extends AbstractController
             'also_ran' => $Race->getAlsoRanEntries(),
             'finished' => $Race->getFinishedEntries(3),
         ];
-
 
         return $this->render('race.html.twig', [
             'form' => $form->createView(),

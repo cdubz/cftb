@@ -2,22 +2,30 @@
 
 {% block title %}Race Day | Tote Board{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('assets/css/board.css') }}" rel="stylesheet" />
+{% endblock %}
+
 {% block body %}
     <div class="tote-board">
         {{ form_start(form) }}
         {{ form_widget(form) }}
         {{ form_end(form) }}
-    </div>
-    <div>
+        <strong>Races: </strong>
         <ul class="race-selector">
             {% for race_option in race_day.races  %}
-                <li{{ race.number == race_option.number ? ' class="selected"' }}>
-                    <a href="/board/{{ race_day.date|date('Y-m-d') }}/{{ race_option.number }}">{{ race_option.number }}</a>
+                <li>
+                    {% if race.number == race_option.number %}
+                        <strong>{{ race_option.number }}</strong>
+                    {% else %}
+                        <a href="/board/{{ race_day.date|date('Y-m-d') }}/{{ race_option.number }}">{{ race_option.number }}</a>
+                    {% endif %}
                 </li>
             {% endfor %}
         </ul>
-    </div>
-    <div class="race-data">
-        {% block race %}{% endblock %}
+        <div class="race-data">
+            {% block race %}{% endblock %}
+        </div>
     </div>
 {% endblock %}

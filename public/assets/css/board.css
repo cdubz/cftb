@@ -1,0 +1,19 @@
+div#day-selector div {
+    display: inline;
+    margin-right: 10px;
+}
+div#day-selector label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+ul.race-selector {
+    display: inline;
+    padding: 0;
+}
+ul.race-selector li {
+    display: inline;
+}
+ul.race-selector li a {
+    text-decoration: none;
+}

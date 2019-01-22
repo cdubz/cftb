@@ -1,0 +1,30 @@
+.race-table {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 0 3em 0;
+    padding: 0;
+    border: 1px solid #000;
+}
+@media screen and (min-width: 980px) {
+    .race-table {
+        max-width: 50%;
+    }
+}
+
+.race-table-cell,
+.race-table-span,
+.race-table-header {
+    width: 25%;
+    box-sizing: border-box;
+    flex-grow: 1;
+    padding: 0.8em 1.2em;
+    overflow: hidden;
+    list-style: none;
+    border: 1px solid #000;
+}
+.race-table-header {
+    font-weight: bold;
+}
+.race-table-span {
+    width: 100%;
+}

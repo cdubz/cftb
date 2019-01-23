@@ -71,10 +71,16 @@ class APIConsumer
                     self::createRaceDay($datum);
                 }
             }
-
-            $ApiUpdateLog = new ApiUpdateLog();
-            $ApiUpdateLog->setEndpoint($endpoint);
-            $this->entityManager->persist($ApiUpdateLog);
+            
+            if ($lastLog) {
+                $lastLog->setUpdated($now);
+                $this->entityManager->persist($lastLog);
+            }
+            else {
+                $ApiUpdateLog = new ApiUpdateLog();
+                $ApiUpdateLog->setEndpoint($endpoint);
+                $this->entityManager->persist($ApiUpdateLog);
+            }
 
             $this->entityManager->flush();
         }

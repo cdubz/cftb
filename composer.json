@@ -1,4 +1,6 @@
 {
+    "name": "cdubz/cftb",
+    "description": "Example Toteboard project.",
     "type": "project",
     "license": "proprietary",
     "require": {
